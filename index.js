@@ -25,6 +25,11 @@ module.exports = robot => {
   robot.on('pull_request.closed', update)
   robot.on('pull_request.synchronize', update)
 
+  // I'm using the wildcard * to log all events
+  robot.on('*', async (context) => {
+    context.log({ event: context.event, action: context.payload.action })
+  })
+
   // Get an express router to expose new HTTP endpoints
   const app = robot.route('/')
 
