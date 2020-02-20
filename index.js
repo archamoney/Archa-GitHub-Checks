@@ -45,7 +45,7 @@ module.exports = robot => {
 
     // Get all open pull requests with a base matching this head
     github.paginate(
-      github.pullRequests.listForRepo({owner, repo, base: head, state, per_page}),
+      github.pullRequests.getAll({owner, repo, base: head, state, per_page}),
       async page => {
         for (const {number} of page.data) {
           // Change the base to match where the original PR was merged.
