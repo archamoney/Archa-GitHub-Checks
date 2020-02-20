@@ -116,6 +116,7 @@ MIT © [Ahmed T. Ali](https://github.com/z0al)
 Archa has made a number changes to fit this tool into our build process, these changes include:
 - Renaming the tool ('Dep' -> 'Archa Github Checks')
 - Label casing ('dependent' -> 'Dependent')
+- Removing the `Dependent` label once the dependencies are merged
 - Adding in behaviours from https://github.com/ryanhiebert/probot-chain
 
 If GitHub ever add native 'Depends on' support (https://github.com/isaacs/github/issues/959) then we should depricate this check
