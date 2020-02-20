@@ -29,29 +29,37 @@ module.exports = robot => {
   // Upon merging a PR which has other dependent PRs the below code will update all
   // dependent PRs to have the base that the merged PR was merged into
   robot.on('pull_request.closed', async context => {
-    const {github, payload} = context
+    const { github, payload, log } = context
     const closedPullRequest = payload.pull_request
 
     if (closedPullRequest.base.repo.default_branch === closedPullRequest.head.ref) {
       return // Skip if the the head is the default branch
     }
 
+    const owner = payload.repository.owner.login
     const repo = payload.repository.name
     const head = closedPullRequest.head.ref
     const base = closedPullRequest.base.ref
     const state = 'open'
     const per_page = 100
 
-    // Get all open pull requests with a base matching this head
-    github.paginate(
-      github.pullRequests.getAll({repo, base: head, state, per_page}),
-      async page => {
-        for (const {number} of page.data) {
-          // Change the base to match where the original PR was merged.
-          github.pullRequests.update({repo, number, base})
+    // Ensure we have an 'owner' value (if we don't then GitHub will reject the request)
+    // TODO: Debug and fix where this occurs
+    if (owner !== undefined) {
+      // Get all open pull requests with a base matching this head
+      github.paginate(
+        github.pullRequests.getAll({owner, repo, base: head, state, per_page}),
+        async page => {
+          for (const {number} of page.data) {
+            // Change the base to match where the original PR was merged.
+            github.pullRequests.update({owner, repo, number, base})
+          }
         }
-      }
-    )
+      )
+    }
+    else {
+      log('No owner name found, skipping chained PR updates')
+    }
   })
 
 
