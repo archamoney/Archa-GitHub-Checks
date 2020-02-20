@@ -25,6 +25,37 @@ module.exports = robot => {
   robot.on('pull_request.closed', update)
   robot.on('pull_request.synchronize', update)
 
+  // Functionality from https://github.com/ryanhiebert/probot-chain used to rebase PRs.
+  // Upon merging a PR which has other dependent PRs the below code will update all
+  // dependent PRs to have the base that the merged PR was merged into
+  app.on('pull_request.closed', async context => {
+    const {github, payload} = context
+    const self = payload.pull_request
+
+    if (self.base.repo.default_branch === self.head.ref) {
+      return // Skip if the the head is the default branch
+    }
+
+    const owner = payload.repository.owner.login
+    const repo = payload.repository.name
+    const head = self.head.ref
+    const base = self.base.ref
+    const state = 'open'
+    const per_page = 100
+
+    // Get all open pull requests with a base matching this head
+    github.paginate(
+      github.pullRequests.list({owner, repo, base: head, state, per_page}),
+      async page => {
+        for (const {number} of page.data) {
+          // Change the base to match where the original PR was merged.
+          github.pullRequests.update({owner, repo, number, base})
+        }
+      }
+    )
+  })
+
+
   // Get an express router to expose new HTTP endpoints
   const app = robot.route('/')
 

@@ -109,3 +109,13 @@ Special thanks to [Jason Etcovitch](https://github.com/JasonEtco) for their help
 ## License
 
 MIT © [Ahmed T. Ali](https://github.com/z0al)
+
+
+# Archa Changes
+
+Archa has made a number changes to fit this tool into our build process, these changes include:
+- Renaming the tool ('Dep' -> 'Archa Github Checks')
+- Label casing ('dependent' -> 'Dependent')
+- Adding in behaviours from https://github.com/ryanhiebert/probot-chain
+
+If GitHub ever add native 'Depends on' support (https://github.com/isaacs/github/issues/959) then we should depricate this check
