@@ -28,7 +28,7 @@ module.exports = robot => {
   // Functionality from https://github.com/ryanhiebert/probot-chain used to rebase PRs.
   // Upon merging a PR which has other dependent PRs the below code will update all
   // dependent PRs to have the base that the merged PR was merged into
-  app.on('pull_request.closed', async context => {
+  robot.on('pull_request.closed', async context => {
     const {github, payload} = context
     const self = payload.pull_request
 
