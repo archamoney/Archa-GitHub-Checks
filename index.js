@@ -35,7 +35,8 @@ module.exports = robot => {
     if (closedPullRequest.base.repo.default_branch === closedPullRequest.head.ref) {
       return // Skip if the the head is the default branch
     }
-
+    
+    log("Pull request closed, looking to rebase dependant PRs")
     const owner = payload.repository.owner.login
     const repo = payload.repository.name
     const head = closedPullRequest.head.ref
@@ -45,6 +46,7 @@ module.exports = robot => {
 
     // Ensure we have an 'owner' value (if we don't then GitHub will reject the request)
     // TODO: Debug and fix where this occurs
+    log(owner)
     if (owner !== undefined) {
       // Get all open pull requests with a base matching this head
       github.paginate(
