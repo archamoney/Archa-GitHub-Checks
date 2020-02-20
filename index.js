@@ -35,8 +35,8 @@ module.exports = robot => {
     if (closedPullRequest.base.repo.default_branch === closedPullRequest.head.ref) {
       return // Skip if the the head is the default branch
     }
-    
     log("Pull request closed, looking to rebase dependant PRs")
+
     const owner = payload.repository.owner.login
     const repo = payload.repository.name
     const head = closedPullRequest.head.ref
@@ -44,24 +44,16 @@ module.exports = robot => {
     const state = 'open'
     const per_page = 100
 
-    // Ensure we have an 'owner' value (if we don't then GitHub will reject the request)
-    // TODO: Debug and fix where this occurs
-    log(owner)
-    if (owner !== undefined) {
-      // Get all open pull requests with a base matching this head
-      github.paginate(
-        github.pullRequests.getAll({owner, repo, base: head, state, per_page}),
-        async page => {
-          for (const {number} of page.data) {
-            // Change the base to match where the original PR was merged.
-            github.pullRequests.update({owner, repo, number, base})
-          }
+    // Get all open pull requests with a base matching this head
+    github.paginate(
+      github.pullRequests.getAll({owner, repo, base: head, state, per_page}),
+      async page => {
+        for (const {number} of page.data) {
+          // Change the base to match where the original PR was merged.
+          github.pullRequests.update({owner, repo, number, base})
         }
-      )
-    }
-    else {
-      log('No owner name found, skipping chained PR updates')
-    }
+      }
+    )
   })
 
 
