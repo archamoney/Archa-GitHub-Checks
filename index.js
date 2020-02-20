@@ -6,7 +6,7 @@ const command = require('probot-commands')
 
 // Ours
 const deprecate = require('./lib/helpers/deprecate')
-const toggleUtils = require('./lib/toggle')
+const toggle = require('./lib/toggle')
 const update = require('./lib/update')
 
 module.exports = robot => {
@@ -15,8 +15,8 @@ module.exports = robot => {
   command(robot, 'ensure', deprecate)
 
   // Toggle label
-  robot.on('pull_request.opened', toggleUtils.toggle)
-  robot.on('pull_request.edited', toggleUtils.toggle)
+  robot.on('pull_request.opened', toggle)
+  robot.on('pull_request.edited', toggle)
 
   // Re-check on dependency updates
   robot.on('issues.closed', update)
