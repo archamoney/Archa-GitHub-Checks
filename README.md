@@ -120,3 +120,5 @@ Archa has made a number changes to fit this tool into our build process, these c
 - Adding in behaviours from https://github.com/ryanhiebert/probot-chain
 
 If GitHub ever add native 'Depends on' support (https://github.com/isaacs/github/issues/959) then we should depricate this check
+
+**Note:** Here is a nice write-up the original creator did on creating his bot https://ahmed.sd/posts/lets-build-a-github-pro-bot/
