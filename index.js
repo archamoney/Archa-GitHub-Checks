@@ -17,6 +17,8 @@ module.exports = robot => {
   // Toggle label
   robot.on('pull_request.opened', toggle)
   robot.on('pull_request.edited', toggle)
+  robot.on('pull_request.ready_for_review', toggle)
+  robot.on('pull_request.synchronize', toggle)
 
   // Re-check on dependency updates
   robot.on('issues.closed', update)
